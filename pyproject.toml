@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hedos"
+version = "2.0.0"
+description = "HEDOS 2.0 radiopharmaceutical dosimetry toolkit"
+readme = "README.md"
+requires-python = ">=3.10"
+
+dependencies = []
+
+[tool.setuptools]
+packages = ["simulation", "workflows"]
+py-modules = ["PlotDoseDistribution"]

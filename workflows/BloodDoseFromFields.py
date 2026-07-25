@@ -1,5 +1,6 @@
 from simulation import ExpandFlowModel, TemporalDistribution, DoseRate, CompartmentDose, Patient
 from PlotDoseDistribution import plot_dose_distribution
+from pathlib import Path
 
 
 def blood_dose_distribution(simulation_params, patient_params, treatment_params):
@@ -11,7 +12,9 @@ def blood_dose_distribution(simulation_params, patient_params, treatment_params)
     print('Tumor volume fraction: {:.3f}'.format(patient_params['tumor_volume_fraction']))
 
     # ======= Step 1. Initialize simulation ============================= #
-    filename = '../../HEDOS2/input/phantom/ICRP89_compartment_model.xlsx'
+    ROOT = Path(__file__).resolve().parent.parent
+
+    filename = ROOT / "input" / "phantom" / "ICRP89_compartment_model.xlsx"
     model = ExpandFlowModel(filename, patient_params, simulation_params)
     # add the tumor:
     if 'tumor' in patient_params['organs']:
