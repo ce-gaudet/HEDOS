@@ -18,11 +18,15 @@ packages = [
     "dicom",
     "dicom.rt_utils",
     "dicom.rt_utils.rt_utils_mod",
+    "input",
+    "input.phantom",
 ]
-py-modules = ["PlotDoseDistribution"]
 
+py-modules = [
+    "PlotDoseDistribution"
+]
 
 [tool.setuptools.package-data]
-"*" = [
-    "input/phantom/*.xlsx",
+"input.phantom" = [
+    "ICRP89_compartment_model.xlsx",
 ]
