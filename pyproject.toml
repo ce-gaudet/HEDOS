@@ -20,3 +20,9 @@ packages = [
     "dicom.rt_utils.rt_utils_mod",
 ]
 py-modules = ["PlotDoseDistribution"]
+
+
+[tool.setuptools.package-data]
+"*" = [
+    "input/phantom/*.xlsx",
+]
