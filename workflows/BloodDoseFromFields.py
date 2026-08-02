@@ -2,17 +2,22 @@ from simulation import ExpandFlowModel, TemporalDistribution, DoseRate, Compartm
 from PlotDoseDistribution import plot_dose_distribution
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parent.parent
+
+PATIENT_DIR = ROOT / "input" / "patient"
+DVH_DIR = PATIENT_DIR / "DVHs"
+BLOOD_PATH = ROOT / "input" / "blood_path.npy"
+
 
 def blood_dose_distribution(simulation_params, patient_params, treatment_params):
     patient = Patient()
-    patient.read_from_numpy('../input/patient', patient_params['organs'], plot=True)
-    patient.write_dvh('../input/patient/DVHs', patient_params['organs'])
+    patient.read_from_numpy(PATIENT_DIR, patient_params["organs"], plot=True)
+    patient.write_dvh(DVH_DIR, patient_params["organs"])
     # patient.get_tumor_volume_fraction(patient_params['tumor_site'], 'tumor')
     # patient_params['tumor_volume_fraction'] = patient.tumor_volume_fraction
     print('Tumor volume fraction: {:.3f}'.format(patient_params['tumor_volume_fraction']))
 
     # ======= Step 1. Initialize simulation ============================= #
-    ROOT = Path(__file__).resolve().parent.parent
 
     filename = ROOT / "input" / "phantom" / "ICRP89_compartment_model.xlsx"
     model = ExpandFlowModel(filename, patient_params, simulation_params)
@@ -26,9 +31,9 @@ def blood_dose_distribution(simulation_params, patient_params, treatment_params)
     if simulation_params['generate_new']:
         model.construct_weibull()
         blood.generate_from_weibull()
-        blood.save('../input/blood_path.npy')
+        blood.save(BLOOD_PATH)
     else:
-        blood.load('../input/blood_path.npy')
+        blood.load(BLOOD_PATH)
 
     # ======== Plot stuff for verification ========================= #
     # blood.plot_time_distributions(['lung'])

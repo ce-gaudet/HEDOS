@@ -1,3 +1,4 @@
 PlotDoseDistribution
+dicom
 simulation
 workflows

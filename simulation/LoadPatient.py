@@ -81,7 +81,7 @@ class Patient:
             one_hot = np.concatenate([np.zeros_like(one_hot[..., 0][..., None]), one_hot], axis=-1)
             labels = np.argmax(one_hot, axis=-1).astype(float)
             labels /= np.amax(labels)
-            plot_volumes(self.dose, labels, cmap='viridis', scrollable=True)
+            #plot_volumes(self.dose, labels, cmap='viridis', scrollable=True)
 
     def _remove_overlap(self):
         """
@@ -116,6 +116,7 @@ class Patient:
         Summarize fields into DVHs of each organ separately. Write out in csv-files.
         This representation can also be used for blood dose calculation.
         """
+        os.makedirs(save_dir, exist_ok=True)
         bins = np.arange(0, np.ceil(np.max(self.dose)) + 0.1, 0.1)
         for organ_name in organ_names:
             idx = np.where(self.seg_organs[organ_name] == 1)
@@ -129,5 +130,5 @@ class Patient:
         plt.legend()
         plt.xlabel('Dose (Gy)')
         plt.ylabel('Coverage (%)')
-        plt.show()
+        plt.show(block=False)
 

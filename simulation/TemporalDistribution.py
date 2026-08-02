@@ -116,7 +116,7 @@ class TemporalDistribution:
             ax.legend()
             ax.set_title(name_of_mean + ' = {:.3f}'.format(np.mean(time_distribution[name])))
         plt.xlabel('time (s)')
-        plt.show()
+        plt.show(block = False)
 
     def plot_time_distributions(self, names):
         """
@@ -151,7 +151,7 @@ class TemporalDistribution:
         plt.legend()
         plt.xlabel('time (s)')
         plt.ylabel('flow (mL/s)')
-        plt.show()
+        plt.show(block = False)
 
     def plot_volumes_over_time(self):
         """
@@ -166,7 +166,7 @@ class TemporalDistribution:
             plt.plot(ti, self.tv[i], label=name)
         plt.legend()
         plt.xlabel('time (s)')
-        plt.show()
+        plt.show(block = False)
 
     def plot_normalized_volume_over_time(self, names):
         """
@@ -191,7 +191,7 @@ class TemporalDistribution:
             print('{} -- Fraction of target volume = {:.3f}'.format(name, final_volumes[idx] / normalized_volumes[idx]))
         plt.xlabel('time (s)')
         plt.suptitle('Normalized volume over time')
-        plt.show()
+        plt.show(block=False)
 
     def plot_final_blood_volumes(self):
         """
@@ -211,6 +211,6 @@ class TemporalDistribution:
         plt.subplots_adjust(bottom=0.4)
         plt.legend()
         plt.tight_layout()
-        plt.show()
+        plt.show(block=False)
 
 

@@ -28,7 +28,7 @@ def plot_dose_distribution(blood_dose_total, dose_contributions, mean_blood_dose
     ax1.legend()
     ax2.legend()
 
-    plt.show()
+    plt.show(block = False)
 
 
 def plot_volumes(volume_ref, volume, plot_slice=None, cmap_ref='Greys_r', cmap='Greys_r', scrollable=False):
@@ -46,7 +46,7 @@ def plot_volumes(volume_ref, volume, plot_slice=None, cmap_ref='Greys_r', cmap='
         fig, ax = plt.subplots(1, 1)
         tracker = IndexTracker(ax, volume_ref, volume, plot_slice, cmap_ref, cmap)
         fig.canvas.mpl_connect('scroll_event', tracker.onscroll)
-        plt.show()
+        plt.show(block = False)
         # return to original backend.
         matplotlib.use(backend)
     else:
@@ -55,7 +55,7 @@ def plot_volumes(volume_ref, volume, plot_slice=None, cmap_ref='Greys_r', cmap='
         c_bar = fig.colorbar(img)
         c_bar.set_label('Treatment dose at slice {} (Gy)'.format(plot_slice))
         ax.imshow(volume[:, :, plot_slice], cmap=cmap, alpha=0.75)
-        plt.show()
+        plt.show(block= False)
 
 
 class IndexTracker(object):
