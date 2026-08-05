@@ -1,20 +1,3 @@
-## Extensions to HEDOS
-
-This repository implements additional features based on the original HEDOS work.  
-Additions include:
-- Automatic organ contouring
-- DICOM file handling and conversion to NumPy format
-- Prediction of lymphocyte survival and comparison between treatment plans
-
-Tasks are divided into example pipelines:
-- pipeline_1: Segmentation
-- pipeline_2: Treatment plan selection and file conversion
-- pipeline_3: HEDOS simulation
-- pipeline_4: Statistical analysis
-
----
-
-
 <img src="figures/logo.png">
 HEDOS : Hematological Dose
 
