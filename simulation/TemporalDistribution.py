@@ -191,7 +191,7 @@ class TemporalDistribution:
             print('{} -- Fraction of target volume = {:.3f}'.format(name, final_volumes[idx] / normalized_volumes[idx]))
         plt.xlabel('time (s)')
         plt.suptitle('Normalized volume over time')
-        plt.show(block=False)
+        plt.show()
 
     def plot_final_blood_volumes(self):
         """
@@ -211,6 +211,6 @@ class TemporalDistribution:
         plt.subplots_adjust(bottom=0.4)
         plt.legend()
         plt.tight_layout()
-        plt.show(block=False)
+        plt.show()
 
 

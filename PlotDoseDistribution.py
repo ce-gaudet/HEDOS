@@ -1,9 +1,11 @@
+import matplotlib
+matplotlib.use("QtAgg")
+
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib
+import os
 
-
-def plot_dose_distribution(blood_dose_total, dose_contributions, mean_blood_dose=None):
+def plot_dose_distribution(blood_dose_total, dose_contributions, plan_name, run_number, mean_blood_dose=None):
     x_max1 = 2 * np.percentile(blood_dose_total.dose, 90)
     x_max2 = max([2 * np.percentile(dose, 90) for dose in dose_contributions.values()])
     bins1 = np.linspace(0, x_max1, 100)
@@ -28,7 +30,18 @@ def plot_dose_distribution(blood_dose_total, dose_contributions, mean_blood_dose
     ax1.legend()
     ax2.legend()
 
-    plt.show(block = False)
+    output_dir = os.path.join("results", "blood_dose", plan_name)
+    os.makedirs(output_dir, exist_ok=True)
+
+    plt.tight_layout()
+    plt.savefig(
+        os.path.join(
+            output_dir,
+            f"BloodDose_run_{run_number:03d}.png"
+        ),
+        dpi=300,
+    )
+    plt.close(fig)
 
 
 def plot_volumes(volume_ref, volume, plot_slice=None, cmap_ref='Greys_r', cmap='Greys_r', scrollable=False):
@@ -42,11 +55,10 @@ def plot_volumes(volume_ref, volume, plot_slice=None, cmap_ref='Greys_r', cmap='
     if scrollable:
         backend = matplotlib.get_backend()
         # you need interactive mode for scrolling, on Mac this works:
-        matplotlib.use("QtAgg")
         fig, ax = plt.subplots(1, 1)
         tracker = IndexTracker(ax, volume_ref, volume, plot_slice, cmap_ref, cmap)
         fig.canvas.mpl_connect('scroll_event', tracker.onscroll)
-        plt.show(block = False)
+        plt.show()
         # return to original backend.
         matplotlib.use(backend)
     else:

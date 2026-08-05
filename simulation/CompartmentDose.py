@@ -128,7 +128,12 @@ class CompartmentDose:
             indices_old = indices
             # accumulate dose
             self.dose[indices] += self.dt * dose_rate_func(pos[indices])
-        print('Percentage accepted: {:.2f}%'.format(sum(accept_perc)/len(accept_perc) * 100))
+        if len(accept_perc) > 0:
+            print('Percentage accepted: {:.2f}%'.format(
+                sum(accept_perc) / len(accept_perc) * 100
+            ))
+        else:
+            print("[HEDOS] No accepted random walk paths")
         print('Dose added.')
 
     def _prepare(self, grid, seg, down_sample):

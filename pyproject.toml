@@ -15,9 +15,6 @@ dependencies = []
 packages = [
     "simulation",
     "workflows",
-    "dicom",
-    "dicom.rt_utils",
-    "dicom.rt_utils.rt_utils_mod",
     "input",
     "input.phantom",
 ]

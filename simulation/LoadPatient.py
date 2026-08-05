@@ -63,7 +63,19 @@ class Patient:
         segs_loaded = np.load(
             os.path.join(read_dir, "compressed_segs.npz")
         )
-        self.seg_organs = {organ_name: seg for organ_name, seg in segs_loaded.items() if organ_name in organ_names}
+        self.seg_organs = {}
+
+        for organ_name in organ_names:
+            if organ_name in segs_loaded.files:
+                seg = segs_loaded[organ_name]
+
+                if np.sum(seg) > 0:
+                    self.seg_organs[organ_name] = seg
+                else:
+                    print(f"[HEDOS] Empty organ skipped: {organ_name}")
+            else:
+                print(f"[HEDOS] Missing organ skipped: {organ_name}")
+
         self._remove_overlap()
 
         if os.path.isfile(os.path.join(read_dir, 'dose.npy')):
@@ -81,7 +93,7 @@ class Patient:
             one_hot = np.concatenate([np.zeros_like(one_hot[..., 0][..., None]), one_hot], axis=-1)
             labels = np.argmax(one_hot, axis=-1).astype(float)
             labels /= np.amax(labels)
-            #plot_volumes(self.dose, labels, cmap='viridis', scrollable=True)
+            plot_volumes(self.dose, labels, cmap='viridis', scrollable=True)
 
     def _remove_overlap(self):
         """
@@ -97,21 +109,27 @@ class Patient:
             self.seg_organs[organ_name] = seg.astype(bool)
 
     def get_tumor_volume_fraction(self, tumor_bearing_organ, tumor):
-        """
-        This function gets the volume fraction of the tumor with respect to the organ in which it resides.
-        """
-        self.tumor_volume_fraction = np.sum(self.seg_organs[tumor]) / np.sum(self.seg_organs[tumor_bearing_organ])
-        print('Tumor volume fraction = {:.4f}'.format(self.tumor_volume_fraction))
+        organ_volume = np.sum(self.seg_organs[tumor_bearing_organ])
+
+        if organ_volume == 0:
+            print(f"[WARNING] {tumor_bearing_organ}: empty organ, tumor volume fraction set to NaN.")
+            self.tumor_volume_fraction = np.nan
+        else:
+            self.tumor_volume_fraction = np.sum(self.seg_organs[tumor]) / organ_volume
+
+        print(f"Tumor volume fraction = {self.tumor_volume_fraction:.4f}")
 
     def get_mean_organ_dose(self, organ_name):
-        """
-        This function calculates the mean organ dose.
-        """
         idx = np.where(self.seg_organs[organ_name] == 1)
-        mod = np.mean(self.dose[idx[0], idx[1], idx[2]])
-        return mod
+        organ_dose = self.dose[idx[0], idx[1], idx[2]]
 
-    def write_dvh(self, save_dir, organ_names):
+        if organ_dose.size == 0:
+            print(f"[WARNING] {organ_name}: no voxels found, mean dose cannot be computed.")
+            return np.nan
+
+        return np.mean(organ_dose)
+
+    def write_dvh(self, save_dir, organ_names, plan_name):
         """
         Summarize fields into DVHs of each organ separately. Write out in csv-files.
         This representation can also be used for blood dose calculation.
@@ -119,10 +137,21 @@ class Patient:
         os.makedirs(save_dir, exist_ok=True)
         bins = np.arange(0, np.ceil(np.max(self.dose)) + 0.1, 0.1)
         for organ_name in organ_names:
+
+            if organ_name not in self.seg_organs:
+                print(f"[WARNING] {organ_name}: segmentation missing, skipping DVH.")
+                continue
             idx = np.where(self.seg_organs[organ_name] == 1)
             organ_dose = self.dose[idx[0], idx[1], idx[2]]
             values, bins = np.histogram(organ_dose, bins=bins)
-            coverage = np.append(np.cumsum(values[::-1])[::-1] / organ_dose.size * 100, [0])
+            if organ_dose.size == 0:
+                print(f"[WARNING] {organ_name}: no voxels found, skipping DVH.")
+                coverage = np.zeros_like(bins, dtype=float)
+            else:
+                coverage = np.append(
+                    np.cumsum(values[::-1])[::-1] / organ_dose.size * 100,
+                    [0],
+                )
             dvh = np.stack([bins, coverage], axis=1)
             # save
             pd.DataFrame(dvh).to_csv(os.path.join(save_dir, organ_name + '_DVH.csv'), header=['dose_bins', 'coverage'])
@@ -130,5 +159,7 @@ class Patient:
         plt.legend()
         plt.xlabel('Dose (Gy)')
         plt.ylabel('Coverage (%)')
-        plt.show(block=False)
+        plt.tight_layout()
+        plt.savefig(os.path.join(save_dir, f"{plan_name}.png"), dpi=300)
+        plt.close()
 
