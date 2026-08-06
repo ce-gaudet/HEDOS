@@ -13,3 +13,6 @@ __pycache__/
 
 input/patient/
 *.dcm
+
+
+input/blood_path.npy
