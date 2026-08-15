@@ -1,4 +1,3 @@
----
 
 ## Note
 
@@ -12,7 +11,7 @@ HEDOS Extension repository:
 
 
 <img src="figures/logo.png">
-title: "HEDOS : Hematological Dose"
+HEDOS : Hematological Dose
 
 ## Installation
 
