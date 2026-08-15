@@ -1,6 +1,13 @@
 <img src="figures/logo.png">
 HEDOS : Hematological Dose
 
+This repository contains the original HEDOS codebase with minor functional modifications made to improve compatibility with the HEDOS Extension workflow. The core HEDOS blood dose calculation framework and functionality have otherwise been preserved.
+
+The HEDOS Extension repository provides the patient-specific workflow surrounding HEDOS, including DICOM (CT, RTSTRUCT, RTDOSE) preparation and conversion of patient data into the NumPy inputs required by HEDOS.
+
+HEDOS Extension:
+https://github.com/ce-gaudet/HEDOS_Extension
+
 ## Installation
 
 Checkout the python source code
