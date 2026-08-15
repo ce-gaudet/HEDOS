@@ -4,7 +4,7 @@
 This repository contains the original HEDOS codebase with minor functional modifications made to improve compatibility with the HEDOS Extension workflow. The core HEDOS blood dose calculation framework and functionality have otherwise been preserved.
 
 HEDOS Extension repository:
-[PUT THE REPOSITORY LINK HERE]
+https://github.com/kildealab/HEDOS_Extension
 
 ---
 
